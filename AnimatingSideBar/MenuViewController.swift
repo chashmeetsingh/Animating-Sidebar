@@ -8,11 +8,11 @@
 
 import UIKit
 
-import UIKit
-
 class MenuViewController: UITableViewController {
     
     let cellReuseidentifier: String = "MenuItemCell"
+    
+    var mainVC: MainViewController?
     
     var detailVC: DetailViewController? {
         didSet {
@@ -75,17 +75,9 @@ class MenuViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let menuItem = menuItems[indexPath.row] as! NSDictionary
-        
-        detailVC?.imageView.image = UIImage(named: menuItem["bigImage"] as! String)
-        if let colorsArray = menuItem["colors"] as? [CGFloat] {
-            
-            detailVC?.view.backgroundColor = UIColor(red: colorsArray[0] / 255,
-                                                     green: colorsArray[1] / 255,
-                                                     blue: colorsArray[2] / 255,
-                                                     alpha: 1)
-        }
+        detailVC?.menuItem = menuItem
+        mainVC?.hideOrShowMenu(false, animated: true)
     }
     
 }

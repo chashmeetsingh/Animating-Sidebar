@@ -10,6 +10,21 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
+    var menuItem: NSDictionary? {
+        didSet {
+            if let menuItem = menuItem {
+                self.imageView.image = UIImage(named: menuItem["bigImage"] as! String)
+                if let colorsArray = menuItem["colors"] as? [CGFloat] {
+                    
+                    self.view.backgroundColor = UIColor(red: colorsArray[0] / 255,
+                                                        green: colorsArray[1] / 255,
+                                                        blue: colorsArray[2] / 255,
+                                                        alpha: 1)
+                }
+            }
+        }
+    }
+    
     lazy var imageView: UIImageView = {
         let frame = CGRect(x: 0, y: 0, width: 320, height: 320)
         let iv = UIImageView(frame: frame)

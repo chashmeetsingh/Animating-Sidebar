@@ -8,16 +8,27 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UIScrollViewDelegate {
     
     let sideMenuWidth: CGFloat = 80
     
     var detailVC: DetailViewController?
     
+    var menuItem: NSDictionary? {
+        didSet {
+            hideOrShowMenu(false, animated: true)
+            if let detailViewController = detailVC {
+                detailViewController.menuItem = menuItem
+            }
+        }
+    }
+    
+    var isMenuVisible = false
+    
     lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.frame = self.view.bounds
-        sv.isPagingEnabled = true
+        sv.isPagingEnabled = sv.contentOffset.x < (sv.contentSize.width - sv.frame.width)
         sv.bounces = false
         sv.showsVerticalScrollIndicator = false
         sv.showsHorizontalScrollIndicator = false
@@ -56,6 +67,8 @@ class MainViewController: UIViewController {
         addContentView()
         addMenuContainerView()
         addDetailContainerView()
+        
+        hideOrShowMenu(false, animated: false)
     }
     
     func addScrollView() {
@@ -70,6 +83,7 @@ class MainViewController: UIViewController {
         let menuVC = MenuViewController()
         let detailVC = DetailViewController()
         menuVC.detailVC = detailVC
+        menuVC.mainVC = self
         self.detailVC = detailVC
         let nv = UINavigationController(rootViewController: menuVC)
         nv.navigationBar.isTranslucent = false
@@ -92,6 +106,12 @@ class MainViewController: UIViewController {
         detailContainerView.addSubview(detailViewController.view)
         detailViewController.didMove(toParentViewController: self)
         contentView.addSubview(detailContainerView)
+    }
+    
+    func hideOrShowMenu(_ show: Bool, animated: Bool) {
+        let menuOffset = menuContainerView.bounds.width
+        scrollView.setContentOffset(show ? CGPoint.zero : CGPoint(x: menuOffset, y: 0), animated: animated)
+        isMenuVisible = show
     }
 
 }
