@@ -8,19 +8,20 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     
     let sideMenuWidth: CGFloat = 80
+    
+    var detailVC: DetailViewController?
     
     lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.frame = self.view.bounds
-//        sv.backgroundColor = .red
         sv.isPagingEnabled = true
-        sv.isScrollEnabled = true
         sv.bounces = false
         sv.showsVerticalScrollIndicator = false
-        sv.showsHorizontalScrollIndicator = true
+        sv.showsHorizontalScrollIndicator = false
+        sv.contentSize = CGSize(width: self.view.bounds.width + self.sideMenuWidth, height: self.view.bounds.height)
         return sv
     }()
     
@@ -66,7 +67,11 @@ class ViewController: UIViewController {
     }
     
     func addMenuContainerView() {
-        let nv = UINavigationController(rootViewController: MenuViewController())
+        let menuVC = MenuViewController()
+        let detailVC = DetailViewController()
+        menuVC.detailVC = detailVC
+        self.detailVC = detailVC
+        let nv = UINavigationController(rootViewController: menuVC)
         nv.navigationBar.isTranslucent = false
         nv.navigationBar.barTintColor = .black
         let menuViewController = nv
@@ -78,6 +83,14 @@ class ViewController: UIViewController {
     }
     
     func addDetailContainerView() {
+        let nv = UINavigationController(rootViewController: self.detailVC!)
+        nv.navigationBar.isTranslucent = false
+        nv.navigationBar.barTintColor = .black
+        let detailViewController = nv
+        addChildViewController(detailViewController)
+        detailViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        detailContainerView.addSubview(detailViewController.view)
+        detailViewController.didMove(toParentViewController: self)
         contentView.addSubview(detailContainerView)
     }
 

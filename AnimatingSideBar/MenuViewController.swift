@@ -12,6 +12,23 @@ import UIKit
 
 class MenuViewController: UITableViewController {
     
+    let cellReuseidentifier: String = "MenuItemCell"
+    
+    var detailVC: DetailViewController? {
+        didSet {
+            let menuItem = menuItems.firstObject as! NSDictionary
+            
+            detailVC?.imageView.image = UIImage(named: menuItem["bigImage"] as! String)
+            if let colorsArray = menuItem["colors"] as? [CGFloat] {
+                
+                detailVC?.view.backgroundColor = UIColor(red: colorsArray[0] / 255,
+                                                         green: colorsArray[1] / 255,
+                                                         blue: colorsArray[2] / 255,
+                                                         alpha: 1)
+            }
+        }
+    }
+    
     lazy var menuItems: NSArray = {
         let path = Bundle.main.path(forResource: "MenuItems", ofType: "plist")
         return NSArray(contentsOfFile: path!)!
@@ -21,11 +38,12 @@ class MenuViewController: UITableViewController {
         super.viewDidLoad()
 
         navigationController!.navigationBar.clipsToBounds = true
+        
         configureTableView()
     }
     
     func configureTableView() {
-        tableView.register(MenuItemCell.self, forCellReuseIdentifier: "MenuItemCell")
+        tableView.register(MenuItemCell.self, forCellReuseIdentifier: cellReuseidentifier)
         tableView.delegate = self
     }
     
@@ -42,14 +60,32 @@ class MenuViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuItemCell") as! MenuItemCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseidentifier) as! MenuItemCell
+        
         let menuItem = menuItems[indexPath.row] as! NSDictionary
-        cell.configureForMenuItem(menuItem, view.bounds.height / CGFloat(menuItems.count))
+        
+        cell.height = view.bounds.height / CGFloat(menuItems.count)
+        cell.configureForMenuItem(menuItem)
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0.0
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let menuItem = menuItems[indexPath.row] as! NSDictionary
+        
+        detailVC?.imageView.image = UIImage(named: menuItem["bigImage"] as! String)
+        if let colorsArray = menuItem["colors"] as? [CGFloat] {
+            
+            detailVC?.view.backgroundColor = UIColor(red: colorsArray[0] / 255,
+                                                     green: colorsArray[1] / 255,
+                                                     blue: colorsArray[2] / 255,
+                                                     alpha: 1)
+        }
     }
     
 }

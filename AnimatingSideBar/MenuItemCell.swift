@@ -21,14 +21,16 @@ class MenuItemCell: UITableViewCell {
         return iv
     }()
     
-    func configureForMenuItem(_ menuItem: NSDictionary, _ height: CGFloat) {
+    func configureForMenuItem(_ menuItem: NSDictionary) {
         menuItemImageView.image = UIImage(named: menuItem["image"] as! String)
         
         if let colorsArray = menuItem["colors"] as? [CGFloat] {
-            backgroundColor = UIColor(red: colorsArray[0] / 255, green: colorsArray[1] / 255, blue: colorsArray[2] / 255, alpha: 1)
+            
+            backgroundColor = UIColor(red: colorsArray[0] / 255,
+                                      green: colorsArray[1] / 255,
+                                      blue: colorsArray[2] / 255,
+                                      alpha: 1)
         }
-        
-        self.height = height
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
