@@ -33,6 +33,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         sv.showsVerticalScrollIndicator = false
         sv.showsHorizontalScrollIndicator = false
         sv.contentSize = CGSize(width: self.view.bounds.width + self.sideMenuWidth, height: self.view.bounds.height)
+        sv.delegate = self
         return sv
     }()
     
@@ -71,6 +72,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         hideOrShowMenu(false, animated: false)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        menuContainerView.layer.anchorPoint = CGPoint(x: 1.0, y: 0.5)
+        hideOrShowMenu(isMenuVisible, animated: false)
+    }
+    
     func addScrollView() {
         view.addSubview(scrollView)
     }
@@ -85,33 +92,62 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         menuVC.detailVC = detailVC
         menuVC.mainVC = self
         self.detailVC = detailVC
-        let nv = UINavigationController(rootViewController: menuVC)
-        nv.navigationBar.isTranslucent = false
-        nv.navigationBar.barTintColor = .black
-        let menuViewController = nv
+        let menuViewController = embedInsideNavigationController(menuVC)
         addChildViewController(menuViewController)
-        menuViewController.view.translatesAutoresizingMaskIntoConstraints = false
         menuContainerView.addSubview(menuViewController.view)
         menuViewController.didMove(toParentViewController: self)
         contentView.addSubview(menuContainerView)
     }
     
     func addDetailContainerView() {
-        let nv = UINavigationController(rootViewController: self.detailVC!)
-        nv.navigationBar.isTranslucent = false
-        nv.navigationBar.barTintColor = .black
-        let detailViewController = nv
+        let detailViewController = embedInsideNavigationController(self.detailVC!)
         addChildViewController(detailViewController)
-        detailViewController.view.translatesAutoresizingMaskIntoConstraints = false
         detailContainerView.addSubview(detailViewController.view)
         detailViewController.didMove(toParentViewController: self)
         contentView.addSubview(detailContainerView)
+    }
+    
+    func embedInsideNavigationController(_ vc: UIViewController) -> UINavigationController {
+        let nv = UINavigationController(rootViewController: vc)
+        nv.navigationBar.isTranslucent = false
+        nv.navigationBar.barTintColor = .black
+        nv.view.translatesAutoresizingMaskIntoConstraints = false
+        return nv
     }
     
     func hideOrShowMenu(_ show: Bool, animated: Bool) {
         let menuOffset = menuContainerView.bounds.width
         scrollView.setContentOffset(show ? CGPoint.zero : CGPoint(x: menuOffset, y: 0), animated: animated)
         isMenuVisible = show
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let multiplier = 1.0 / menuContainerView.bounds.width
+        let offset = scrollView.contentOffset.x * multiplier
+        let fraction = 1.0 - offset
+        menuContainerView.layer.transform = transformForFraction(fraction: fraction)
+        menuContainerView.alpha = fraction
+        
+        if let detailViewController = detailVC {
+            if let rotatingView = detailViewController.hamburgerView {
+                rotatingView.rotate(fraction: fraction)
+            }
+        }
+        
+        scrollView.isPagingEnabled = scrollView.contentOffset.x < (scrollView.contentSize.width - scrollView.frame.width)
+        
+        let menuOffset = menuContainerView.bounds.width
+        isMenuVisible = !CGPoint(x: menuOffset, y: 0).equalTo(scrollView.contentOffset)
+    }
+    
+    func transformForFraction(fraction:CGFloat) -> CATransform3D {
+        var identity = CATransform3DIdentity
+        identity.m34 = -1.0 / 1000.0;
+        let angle = Double(1.0 - fraction) * -(Double.pi / 2)
+        let xOffset = menuContainerView.bounds.width * 0.5
+        let rotateTransform = CATransform3DRotate(identity, CGFloat(angle), 0.0, 1.0, 0.0)
+        let translateTransform = CATransform3DMakeTranslation(xOffset, 0.0, 0.0)
+        return CATransform3DConcat(rotateTransform, translateTransform)
     }
 
 }

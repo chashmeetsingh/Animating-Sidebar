@@ -15,6 +15,7 @@
 		6D8FB8E01EBA116700AC5D49 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8FB8DF1EBA116700AC5D49 /* MenuViewController.swift */; };
 		6D8FB8E21EBA11FC00AC5D49 /* MenuItems.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6D8FB8E11EBA11FC00AC5D49 /* MenuItems.plist */; };
 		6D8FB8E41EBA1EF600AC5D49 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8FB8E31EBA1EF600AC5D49 /* DetailViewController.swift */; };
+		6D8FB8E61EBA379100AC5D49 /* HamburgerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8FB8E51EBA379100AC5D49 /* HamburgerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		6D8FB8DF1EBA116700AC5D49 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		6D8FB8E11EBA11FC00AC5D49 /* MenuItems.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MenuItems.plist; sourceTree = "<group>"; };
 		6D8FB8E31EBA1EF600AC5D49 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		6D8FB8E51EBA379100AC5D49 /* HamburgerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HamburgerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				6D8FB8DD1EBA107D00AC5D49 /* MenuItemCell.swift */,
 				6D8FB8E11EBA11FC00AC5D49 /* MenuItems.plist */,
 				6D8FB8E31EBA1EF600AC5D49 /* DetailViewController.swift */,
+				6D8FB8E51EBA379100AC5D49 /* HamburgerView.swift */,
 			);
 			path = AnimatingSideBar;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 			files = (
 				6D8FB8DE1EBA107D00AC5D49 /* MenuItemCell.swift in Sources */,
 				6D8FB8CE1EBA07E900AC5D49 /* MainViewController.swift in Sources */,
+				6D8FB8E61EBA379100AC5D49 /* HamburgerView.swift in Sources */,
 				6D8FB8E41EBA1EF600AC5D49 /* DetailViewController.swift in Sources */,
 				6D8FB8CC1EBA07E900AC5D49 /* AppDelegate.swift in Sources */,
 				6D8FB8E01EBA116700AC5D49 /* MenuViewController.swift in Sources */,
